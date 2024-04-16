@@ -1,20 +1,39 @@
-import git
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import re
+from pydriller import Repository
+import re
 import json
 
+dict = {}
+for cmt in Repository("https://github.com/apache/pdfbox").traverse_commits():
+        
+        iss = []  
+        pt = r'\bPDFBOX-\d+\b' 
+        iss = re.findall(pt, cmt.msg)
+        cmtd = {
+                "cmt_hash":cmt.hash,
+                "added_files" : 0,
+                "deleted_files" : 0,
+                "modified_files" : 0  
+        }
 
-# specify the path to the Git repository
-repo_path = "/Users/gauravsharma/Desktop/pdfbox"
+        for file in cmt.modified_files:
+            if file.change_type.name == "ADD":
+                cmtd["added_files"]+=1
+            if file.change_type.name == "DELETE":
+                cmtd["deleted_files"]+=1
+            if file.change_type.name == "MODIFY":
+                cmtd["modified_files"]+=1
+        
+        for isd in iss:
+            if isd in dict:
+                dict[isd].append(cmtd)
+            else:
+                dict[isd] = [cmtd]
 
-# create a Git repo object
-repo = git.Repo(repo_path)
+# saving the generated data in pr_data.json file
+with open("issue.json", "w") as outfile: 
+    json.dump(dict, outfile)
 
-commits = repo.iter_commits()
-
-commit_data = {}
-
-
-for c in commits:
-    commit_data[c.hexsha] = [item.a_path for item in c.diff()]
-
-with open("data.json", "w") as o: 
-    json.dump(commit_data, o)
