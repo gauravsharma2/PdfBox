@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 import re
 from pydriller import Repository
 import re
@@ -32,8 +29,6 @@ for cmt in Repository("https://github.com/apache/pdfbox").traverse_commits():
                 dict[isd].append(cmtd)
             else:
                 dict[isd] = [cmtd]
-
-# saving the generated data in pr_data.json file
 with open("issue.json", "w") as outfile: 
     json.dump(dict, outfile)
 

@@ -5,7 +5,7 @@ f = open('issue.json')
  
 isd = json.load(f)
 
-std = {"ISSUE_ID":[],"cm":[],"Added":[], "Modified":[],"Deleted":[]}
+std = {"BUG":[],"cm":[],"Added":[], "Modified":[],"Deleted":[]}
 
 for i in isd.keys():
     added = 0
@@ -18,7 +18,7 @@ for i in isd.keys():
         modified+=c["modified_files"]
         deleted+=c["deleted_files"]
         added+=c["added_files"]
-    std["ISSUE_ID"].append(i)
+    std["BUG"].append(i)
     std["cm"].append(cml)
     std["Added"].append(added)
     std["Modified"].append(modified)
